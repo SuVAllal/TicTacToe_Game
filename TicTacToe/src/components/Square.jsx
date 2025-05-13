@@ -1,8 +1,12 @@
-function Square() {
-    
+import '../css/Square.css'
+
+
+function Square({ children, updateBoard, index }) {
     
     return (
-        <div></div>
+        <div className="square">
+            {children}
+        </div>
     )
 }
 
