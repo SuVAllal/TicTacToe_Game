@@ -55,6 +55,14 @@ function Board() {
   }
 
 
+  // Función para comprobar si hay empate en el tablero (se han hecho todos los movimientos y no hay ganador)
+  const checkEndGame = (newBoard) => {
+    // revisamos si hay un empate si no hay más espacios vacíos en el tablero 
+    // (todas las posiciones son distintas de null)
+    return newBoard.every((square) => square !== null)
+  }
+
+
   // Función para actualizar el tablero al hacer clic
   const updateBoard = (index) => {
     // No actualizamos la posición si ya está marcada o si ya hay un ganador (evitamos que se permita seguir jugando)
@@ -67,12 +75,14 @@ function Board() {
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X; // Cambiamos el turno
     setTurn(newTurn);
 
-    // revisar si hay una ganador
+    // revisar si hay un ganador
     const newWinner = checkWinner(newBoard); // le pasamos el newBoard ya que board puede no estar actualizado aún (el estado es ASÍNCRONO)
     if (newWinner) {
       // si hay un nuevo ganador
       setWinner(newWinner);
-    } // TODO: comprobar si el juego ha terminado
+    } else if (checkEndGame(newBoard)) { // si hay empate
+        setWinner(false)
+    }
   };
 
 
