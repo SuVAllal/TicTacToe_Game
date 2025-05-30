@@ -46,6 +46,15 @@ function Board() {
     return null;
   };
 
+
+  // Función para resetear el juego a su estado inicial
+  const resetGame = () => {
+    setBoard(Array(9).fill(null))
+    setTurn(TURNS.X)
+    setWinner(null)
+  }
+
+
   // Función para actualizar el tablero al hacer clic
   const updateBoard = (index) => {
     // No actualizamos la posición si ya está marcada o si ya hay un ganador (evitamos que se permita seguir jugando)
@@ -66,9 +75,11 @@ function Board() {
     } // TODO: comprobar si el juego ha terminado
   };
 
+
   return (
     <main className="board">
       <h1>Tic Tac Toe</h1>
+      <button onClick={resetGame}>Reiniciar juego</button>
       <section className="game">
         {board.map((_, index) => {
           // Usamos el índice ya que es lo que vamos a renderizar (la posición)
@@ -107,7 +118,7 @@ function Board() {
               </header>
 
               <footer>
-                <button>Volver a empezar</button>
+                <button onClick={resetGame}>Volver a empezar</button>
               </footer>
             </div>
           </section>
