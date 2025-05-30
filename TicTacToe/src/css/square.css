@@ -23,7 +23,8 @@
     border-radius: 10px;
 }
 
-.turn .square {
+.turn .square,
+.winner .square {
     width: 70px;
     height: 70px;
     pointer-events: none;

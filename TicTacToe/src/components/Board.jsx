@@ -1,6 +1,7 @@
 import Square from "./Square";
 import { useState } from "react";
 import "../css/board.css";
+import "../css/square.css";
 
 // Turnos
 const TURNS = {
@@ -8,20 +9,61 @@ const TURNS = {
   O: "o",
 };
 
+// Combinaciones ganadoras
+const WINNER_COMBOS = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
 function Board() {
   // El tablero es un array de 9 posiciones inicialmente vacío
   const [board, setBoard] = useState(Array(9).fill(null));
   // Estado para saber a quién le toca el turno, inicialmente empieza la X
   const [turn, setTurn] = useState(TURNS.X);
+  // Estado del ganador: null (no hay ganador) o false (hay empate)
+  const [winner, setWinner] = useState(null);
+
+  // Método para saber el ganador revisando todas las combinaciones ganadoras
+  const checkWinner = (boardToCheck) => {
+    for (const combo of WINNER_COMBOS) {
+      const [a, b, c] = combo; // Recuperamos las posiciones a chequear
+      if (
+        boardToCheck[a] && // miramos si hay una X o una O en la posición 'a'
+        boardToCheck[a] === boardToCheck[b] && // miramos si tanto en 'a' como en 'b' hay el mismo símbolo
+        boardToCheck[a] === boardToCheck[c] // lo mismo para la tercera posición
+      ) {
+        return boardToCheck[a]; // devolvemos el símbolo del ganador
+      }
+    }
+
+    // si no hay ganador devolvemos null
+    return null;
+  };
 
   // Función para actualizar el tablero al hacer clic
   const updateBoard = (index) => {
-    const newBoard = [...board]; // Creamos una nueva versión del tablero
+    // No actualizamos la posición si ya está marcada o si ya hay un ganador (evitamos que se permita seguir jugando)
+    if (board[index] || winner) return;
+
+    const newBoard = [...board]; // Creamos una nueva versión del tablero, mantenemos los objetos INMUTABLES
     newBoard[index] = turn; // En la casilla donde se hizo clic guardamos el valor del turno actual (el que hizo clic)
     setBoard(newBoard);
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X; // Cambiamos el turno
     setTurn(newTurn);
+
+    // revisar si hay una ganador
+    const newWinner = checkWinner(newBoard); // le pasamos el newBoard ya que board puede no estar actualizado aún (el estado es ASÍNCRONO)
+    if (newWinner) {
+      // si hay un nuevo ganador
+      setWinner(newWinner);
+    } // TODO: comprobar si el juego ha terminado
   };
 
   return (
@@ -46,6 +88,31 @@ function Board() {
         <Square isSelected={turn === TURNS.X}>{TURNS.X}</Square>
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
+
+      {
+        // Si es diferente a null (estado inicial) significa que hay un ganador o un empate, hay que mostrarlo
+        winner !== null && (
+          <section className="winner">
+            <div className="text">
+              <h2>
+                {
+                    winner === false
+                        ? 'Empate'
+                        : 'Ganó: ' + winner
+                }
+              </h2>
+
+              <header className="win">
+                {winner && <Square>{winner}</Square>}
+              </header>
+
+              <footer>
+                <button>Volver a empezar</button>
+              </footer>
+            </div>
+          </section>
+        )
+      }
     </main>
   );
 }
