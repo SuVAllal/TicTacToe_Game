@@ -13,3 +13,19 @@
     color: #fff;
     background: #09f;
 }
+
+.turn {
+    display: flex;
+    justify-content: center;
+    margin: 15px auto;
+    width: fit-content;
+    position: relative;
+    border-radius: 10px;
+}
+
+.turn .square {
+    width: 70px;
+    height: 70px;
+    pointer-events: none;
+    border-color: transparent;
+}

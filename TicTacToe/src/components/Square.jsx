@@ -1,10 +1,12 @@
 import '../css/Square.css'
 
 
-function Square({ children, updateBoard, index }) {
-    
+function Square({ children, isSelected, updateBoard, index }) {
+    const className = `square ${isSelected ? 'is-selected' : ''}`
+
+
     return (
-        <div className="square">
+        <div className={className}>
             {children}
         </div>
     )

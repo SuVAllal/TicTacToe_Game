@@ -11,7 +11,10 @@ const TURNS = {
 
 function App() {
   // El tablero es un array de 9 posiciones inicialmente vacío
-  const [board, setBoard] = useState(['x', 'o', 'x', 'x', 'o', 'x', 'x', 'o', 'x'])
+  const [board, setBoard] = useState(Array(9).fill(null));
+
+  // Estado para saber de quién es el turno, inicialmente empiezan las X
+  const [turn, setTurn] = useState(TURNS.X);
 
   return (
     <main className="board">
@@ -29,7 +32,13 @@ function App() {
           );
         })}
       </section>
+
+      <section className="turn">
+        <Square isSelected={turn === TURNS.X}>{TURNS.X}</Square>
+        <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
+      </section>
     </main>
+    // Cambiamos el estado a través del estado de un componente padre 
   );
 }
 
