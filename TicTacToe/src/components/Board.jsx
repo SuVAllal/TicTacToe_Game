@@ -2,24 +2,8 @@ import Square from "./Square";
 import { useState } from "react";
 import "../css/board.css";
 import "../css/square.css";
-
-// Turnos
-const TURNS = {
-  X: "x",
-  O: "o",
-};
-
-// Combinaciones ganadoras
-const WINNER_COMBOS = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
+import confetti from "canvas-confetti";
+import { TURNS, WINNER_COMBOS } from "../constants";
 
 function Board() {
   // El tablero es un array de 9 posiciones inicialmente vacío
@@ -79,6 +63,7 @@ function Board() {
     const newWinner = checkWinner(newBoard); // le pasamos el newBoard ya que board puede no estar actualizado aún (el estado es ASÍNCRONO)
     if (newWinner) {
       // si hay un nuevo ganador
+      confetti(); // Lanzamos confetti
       setWinner(newWinner);
     } else if (checkEndGame(newBoard)) { // si hay empate
         setWinner(false)
@@ -91,7 +76,7 @@ function Board() {
       <h1>Tic Tac Toe</h1>
       <button onClick={resetGame}>Reiniciar juego</button>
       <section className="game">
-        {board.map((_, index) => {
+        {board.map((square, index) => {
           // Usamos el índice ya que es lo que vamos a renderizar (la posición)
           return (
             <Square
@@ -99,7 +84,7 @@ function Board() {
               index={index} // Consideramo el índice como id único ya que las posiciones nunca van a cambiar
               updateBoard={updateBoard}
             >
-              {board[index]}
+              {square}
             </Square>
           );
         })}
