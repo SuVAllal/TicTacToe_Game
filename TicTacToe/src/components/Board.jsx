@@ -3,7 +3,9 @@ import { useState } from "react";
 import "../css/board.css";
 import "../css/square.css";
 import confetti from "canvas-confetti";
-import { TURNS, WINNER_COMBOS } from "../constants";
+import { TURNS } from "../constants";
+import { checkWinnerFrom, checkEndGame } from "../logic/board";
+import { WinnerModal } from "./WinnerModal";
 
 function Board() {
   // El tablero es un array de 9 posiciones inicialmente vacío
@@ -13,37 +15,12 @@ function Board() {
   // Estado del ganador: null (no hay ganador) o false (hay empate)
   const [winner, setWinner] = useState(null);
 
-  // Método para saber el ganador revisando todas las combinaciones ganadoras
-  const checkWinner = (boardToCheck) => {
-    for (const combo of WINNER_COMBOS) {
-      const [a, b, c] = combo; // Recuperamos las posiciones a chequear
-      if (
-        boardToCheck[a] && // miramos si hay una X o una O en la posición 'a'
-        boardToCheck[a] === boardToCheck[b] && // miramos si tanto en 'a' como en 'b' hay el mismo símbolo
-        boardToCheck[a] === boardToCheck[c] // lo mismo para la tercera posición
-      ) {
-        return boardToCheck[a]; // devolvemos el símbolo del ganador
-      }
-    }
-
-    // si no hay ganador devolvemos null
-    return null;
-  };
-
 
   // Función para resetear el juego a su estado inicial
   const resetGame = () => {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
-  }
-
-
-  // Función para comprobar si hay empate en el tablero (se han hecho todos los movimientos y no hay ganador)
-  const checkEndGame = (newBoard) => {
-    // revisamos si hay un empate si no hay más espacios vacíos en el tablero 
-    // (todas las posiciones son distintas de null)
-    return newBoard.every((square) => square !== null)
   }
 
 
@@ -60,7 +37,7 @@ function Board() {
     setTurn(newTurn);
 
     // revisar si hay un ganador
-    const newWinner = checkWinner(newBoard); // le pasamos el newBoard ya que board puede no estar actualizado aún (el estado es ASÍNCRONO)
+    const newWinner = checkWinnerFrom(newBoard); // le pasamos el newBoard ya que board puede no estar actualizado aún (el estado es ASÍNCRONO)
     if (newWinner) {
       // si hay un nuevo ganador
       confetti(); // Lanzamos confetti
@@ -81,7 +58,7 @@ function Board() {
           return (
             <Square
               key={index}
-              index={index} // Consideramo el índice como id único ya que las posiciones nunca van a cambiar
+              index={index} // Consideramos el índice como id único ya que las posiciones nunca van a cambiar
               updateBoard={updateBoard}
             >
               {square}
@@ -95,30 +72,7 @@ function Board() {
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
 
-      {
-        // Si es diferente a null (estado inicial) significa que hay un ganador o un empate, hay que mostrarlo
-        winner !== null && (
-          <section className="winner">
-            <div className="text">
-              <h2>
-                {
-                    winner === false
-                        ? 'Empate'
-                        : 'Ganó: ' + winner
-                }
-              </h2>
-
-              <header className="win">
-                {winner && <Square>{winner}</Square>}
-              </header>
-
-              <footer>
-                <button onClick={resetGame}>Volver a empezar</button>
-              </footer>
-            </div>
-          </section>
-        )
-      }
+      <WinnerModal resetGame={resetGame} winner={winner}/>
     </main>
   );
 }
