@@ -50,7 +50,7 @@ function Board() {
 
   return (
     <main className="board">
-      <h1>Tic Tac Toe</h1>
+      <h1>¡Gato VS Ratón!</h1>
       <button onClick={resetGame}>Reiniciar juego</button>
       <section className="game">
         {board.map((square, index) => {
@@ -61,15 +61,15 @@ function Board() {
               index={index} // Consideramos el índice como id único ya que las posiciones nunca van a cambiar
               updateBoard={updateBoard}
             >
-              {square}
+              {square === TURNS.X ? "cat" : square === TURNS.O ? "mouse" : null}
             </Square>
           );
         })}
       </section>
 
       <section className="turn">
-        <Square isSelected={turn === TURNS.X}>{TURNS.X}</Square>
-        <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
+        <Square isSelected={turn === TURNS.X}>cat</Square>
+        <Square isSelected={turn === TURNS.O}>mouse</Square>
       </section>
 
       <WinnerModal resetGame={resetGame} winner={winner}/>

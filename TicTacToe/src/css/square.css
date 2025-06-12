@@ -11,7 +11,7 @@
 
 .square.is-selected {
     color: #fff;
-    background: #09f;
+    background: #ffe573;
 }
 
 .turn {
@@ -29,4 +29,43 @@
     height: 70px;
     pointer-events: none;
     border-color: transparent;
+}
+
+.cat {
+    width: 60px;
+    height: 60px;
+    background-image: url('../asset/cat.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.mouse {
+    width: 60px;
+    height: 60px;
+    background-image: url('../asset/mouse.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.cat-winner {
+    width: 100px;
+    height: 100px;
+    background-image: url('../asset/cat_winner.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.mouse-winner {
+    width: 100px;
+    height: 100px;
+    background-image: url('../asset/mouse_winner.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.empate {
+    font-size: 24px;
+    color: #fff;
 }

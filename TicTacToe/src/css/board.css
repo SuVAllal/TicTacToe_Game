@@ -5,16 +5,16 @@
 }
 
 .board h1 {
-    color: #eee;
+    color: #4b3e00;
     margin-bottom: 16px;
 }
 
 .board button {
     padding: 8px 12px;
     margin: 25px;
-    background: transparent;
-    border: 2px solid #eee;
-    color: #eee;
+    background: #e8e3d3;
+    border: 2px solid #4b3e00;
+    color: #4b3e00;
     width: 100px;
     border-radius: 5px;
     transition: 0.2s;
@@ -23,15 +23,20 @@
 }
 
 .board button:hover {
-    display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    background: #d6d1bd;
+    color: #4b3e00;
 }
 
 .board .game {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    background-color: #ffe57371;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .winner {
@@ -43,10 +48,11 @@
     display: grid;
     place-items: center;
     background-color: rgba(0, 0, 0, 0.7);
+    color:#4b3e00;
 }
 
 .winner .text {
-    background: #111;
+    background: #ffe573;
     height: 300px;
     width: 320px;
     border: 2px solid #eee;
