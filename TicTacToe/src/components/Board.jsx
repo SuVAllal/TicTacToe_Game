@@ -4,14 +4,24 @@ import "../css/board.css";
 import "../css/square.css";
 import confetti from "canvas-confetti";
 import { TURNS } from "../constants";
-import { checkWinnerFrom, checkEndGame } from "../logic/board";
+import { checkWinnerFrom, checkEndGame, saveGameToStorage, resetGameStorage } from "../logic/board";
 import { WinnerModal } from "./WinnerModal";
 
 function Board() {
-  // El tablero es un array de 9 posiciones inicialmente vacío
-  const [board, setBoard] = useState(Array(9).fill(null));
-  // Estado para saber a quién le toca el turno, inicialmente empieza la X
-  const [turn, setTurn] = useState(TURNS.X);
+  // Tablero
+  const [board, setBoard] = useState(() => {
+    // Leer del local storage es MUY LENTO, por eso leemos solo una vez dentro de la función,
+    // si lo pusiéramos fuera de la función se ejecutaría en cada renderizado cuando no lo necesita
+    const boardFromStorage = window.localStorage.getItem('board')
+    return boardFromStorage ? JSON.parse(boardFromStorage) : // cargamos la partida guardada
+    Array(9).fill(null) // o el valor por defecto, el tablero vacío
+  });
+  // Estado para saber a quién le toca el turno
+  const [turn, setTurn] = useState(() => {
+    const turnFromStorage = window.localStorage.getItem('turn')
+    return turnFromStorage ? turnFromStorage : // La partida guardada
+    TURNS.X // Inicialmente empiezan las X
+  });
   // Estado del ganador: null (no hay ganador) o false (hay empate)
   const [winner, setWinner] = useState(null);
 
@@ -21,6 +31,8 @@ function Board() {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
+
+    resetGameStorage()
   }
 
 
@@ -31,10 +43,15 @@ function Board() {
 
     const newBoard = [...board]; // Creamos una nueva versión del tablero, mantenemos los objetos INMUTABLES
     newBoard[index] = turn; // En la casilla donde se hizo clic guardamos el valor del turno actual (el que hizo clic)
-    setBoard(newBoard);
+    setBoard(newBoard)
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X; // Cambiamos el turno
-    setTurn(newTurn);
+    setTurn(newTurn)
+
+    saveGameToStorage({
+      board: newBoard, 
+      turn: newTurn
+    })
 
     // revisar si hay un ganador
     const newWinner = checkWinnerFrom(newBoard); // le pasamos el newBoard ya que board puede no estar actualizado aún (el estado es ASÍNCRONO)

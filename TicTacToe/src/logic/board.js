@@ -23,3 +23,15 @@ export const checkEndGame = (newBoard) => {
   // (todas las posiciones son distintas de null)
   return newBoard.every((square) => square !== null);
 };
+
+export const saveGameToStorage = ({ board, turn }) => {
+  // guardamos la partida (tablero y turno)
+  window.localStorage.setItem("board", JSON.stringify(board));
+  window.localStorage.setItem("turn", turn);
+};
+
+export const resetGameStorage = () => {
+  // Eliminamos la partida guardada del local storage
+    window.localStorage.removeItem('board');
+    window.localStorage.removeItem('turn');
+}
